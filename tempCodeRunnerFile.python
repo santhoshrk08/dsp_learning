@@ -1,0 +1,23 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+f_signal = 5
+fs_wrong = 7        # only 7 Hz — below Nyquist (need at least 10 Hz for 5 Hz signal)
+
+t_wrong = np.linspace(0, 1, fs_wrong)
+y_wrong = np.sin(2 * np.pi * f_signal * t_wrong)
+t_true = np.linspace(0, 1, 1000)
+y_true = np.sin(2 * np.pi * f_signal * t_true)
+plt.figure(figsize=(10, 4))
+plt.plot(t_true, y_true, 'b-', alpha=0.3, label='True 5 Hz signal')
+plt.stem(t_wrong, y_wrong, 'r', markerfmt='ro',
+         basefmt=' ', label=f'Sampled at {fs_wrong} Hz')
+
+# connect the dots to show what the sampler "thinks" the signal is
+plt.plot(t_wrong, y_wrong, 'r--', alpha=0.7, label='Reconstructed (wrong)')
+plt.xlabel("Time (s)")
+plt.ylabel("Amplitude")
+plt.title(f"ALIASING — fs={fs_wrong} Hz is too low for {f_signal} Hz signal")
+plt.legend()
+plt.grid(True)
+plt.show()
