@@ -13,7 +13,7 @@ plt.plot(t_true, y_true, 'b-', alpha=0.3, label='True 5 Hz signal')
 plt.stem(t_wrong, y_wrong, 'r', markerfmt='ro',
          basefmt=' ', label=f'Sampled at {fs_wrong} Hz')
 
-# connect the dots to show what the sampler "thinks" the signal is
+# connect the dots to show what the sampler "thinks" the signal
 plt.plot(t_wrong, y_wrong, 'r--', alpha=0.7, label='Reconstructed (wrong)')
 plt.xlabel("Time (s)")
 plt.ylabel("Amplitude")
