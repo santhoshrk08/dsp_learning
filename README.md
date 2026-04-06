@@ -12,6 +12,7 @@ What's here
 |----------|-------|------|
 | week1-signals-basics.ipynb | Sine waves, sampling, aliasing | Week 1 |
 | week1-filtering-basics.ipynb | Low-pass filter, SNR measurement | Week 1 |
+| signal-composition-demo.ipynb | Complete signal analysis pipeline | Week 1 |
 
 ## Paper Notes
 
