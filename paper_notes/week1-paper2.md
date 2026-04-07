@@ -4,8 +4,11 @@
 Based on a Statistical Weighted Moving Average Filter
 
 **Authors:** Xiao Hu, Zhong Xiao, Ni Zhang
+
 **Year:** 2011
+
 **Journal:** Journal of Zhejiang University-Science C
+
 **Link:** https://ieeexplore.ieee.org/document/11285722
 
 ## 5-Bullet Summary
