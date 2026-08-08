@@ -4,93 +4,116 @@ ECE student at PSG College of Technology working through Digital Signal
 Processing from fundamentals to research-grade projects, with the long-term
 goal of MS/PhD admission in signal processing.
 
-## What's here
+**Status:** Two complete IEEE-format paper drafts (Month 1 and Month 2-4),
+both awaiting professor review before conference submission. Upcoming
+semesters (Signals and Systems, Control Systems) will deepen the
+theoretical foundation before final submission push.
 
-- Week-by-week Jupyter notebooks implementing DSP concepts in Python
-- Paper notes from IEEE Xplore reading
-- **Month 1** — ECG denoising research project (IIR vs FIR), complete IEEE
-  conference paper draft
-- **Month 2** — Wavelet transforms and adaptive filtering (LMS/RLS) investigation
-- **Month 3** — VHDL/FPGA hardware implementation of the Month 1 filter
+---
 
-## Month 1 — ECG Denoising (Butterworth IIR vs FIR Kaiser)
+## Project Overview
 
-Complete, professor-reviewed IEEE conference paper comparing a 4th-order
-Butterworth IIR filter and an 873-tap FIR Kaiser filter for ECG denoising,
-validated with signal-quality metrics (SNR, NRMSE), Pan-Tompkins R-peak
-detection, QRS morphology analysis, and statistical significance testing
-across four MIT-BIH Arrhythmia Database records.
+**Core project — ECG Signal Denoising.** Started as a filter comparison
+study (Butterworth IIR vs. FIR Kaiser), grew into a full clinical-validation
+pipeline, then extended into adaptive filtering (LMS/RLS), wavelet analysis,
+a hybrid filter architecture, and a real FPGA hardware implementation —
+now spanning two complete paper-length bodies of work.
 
-**Key finding:** Butterworth IIR achieved more consistent SNR improvement and
-significantly better QRS duration preservation than FIR Kaiser, despite the
-latter's theoretical linear-phase advantage — challenging the common
-assumption of unconditional FIR superiority for ECG morphology preservation.
-Both filters share a fundamental limitation: neither can remove synthetic
-noise injected within the ECG's own diagnostic passband (5–15 Hz).
+---
 
-| Notebook | Topic |
-|----------|-------|
-| `ecg_denoising_project.ipynb` | Full Month 1 pipeline: filtering, metrics, Pan-Tompkins, multi-record validation, statistical testing |
+## Paper 1 (Month 1) — ECG Denoising: IIR vs FIR
 
-Paper draft (Overleaf, IEEE format): title *"Comparative Evaluation of IIR
-Butterworth and FIR Kaiser Filters for ECG Denoising: A Clinically-Validated
-Approach"* — awaiting conference venue selection.
+Comparative study of Butterworth IIR and FIR Kaiser Window filters for ECG
+denoising on the MIT-BIH Arrhythmia Database, extended with clinical
+validation (Pan-Tompkins R-peak detection, QRS duration, paired t-test)
+beyond standard signal-domain metrics.
 
-## Month 2 — Wavelets and Adaptive Filtering
+**Key finding:** Butterworth IIR outperforms FIR Kaiser on QRS morphology
+preservation and cross-record consistency despite FIR's linear-phase
+advantage. Both filters share a fundamental limitation: neither can remove
+noise falling inside the ECG's own diagnostic band (0.5–40Hz).
 
-Investigated whether alternative denoising strategies could resolve Month 1's
-in-band noise limitation (noise that overlaps the ECG's own diagnostic
-frequency band, undetectable by frequency-selective filtering).
+**Status:** Complete IEEE paper draft (Overleaf, IEEEtran, 5 pages).
+Professor-reviewed and approved; awaiting conference venue selection.
 
 | Notebook | Topic |
-|----------|-------|
-| `month2_wavelet_analysis.ipynb` | CWT scalograms, DWT thresholding, LMS and RLS adaptive filters from scratch |
+|---|---|
+| `ecg_denoising_project.ipynb` | Full Month 1 pipeline |
+
+---
+
+## Paper 2 (Month 2–4) — Adaptive and Hybrid Filtering for In-Band Noise
+
+Directly extends Paper 1's limitation. Systematically tests whether
+wavelet thresholding, LMS, RLS, and a hybrid IIR+LMS cascade can resolve
+the in-band noise problem that defeats both static filters from Paper 1.
 
 **Key findings:**
-- Wavelet (DWT) thresholding: no improvement over Month 1 methods on in-band
-  noise (F1=83.33%, identical to Butterworth/FIR Kaiser)
-- LMS adaptive filtering (realistic reference signal): F1=96.30% — matches
-  Month 1's best clean-signal baseline, the first method to resolve the
-  in-band noise limitation
-- RLS: matches LMS on detection accuracy, ~4x slower computationally —
-  mirrors Month 1's Butterworth-vs-FIR-Kaiser efficiency finding
+- Wavelet DWT thresholding fails identically to static filters (F1=83.33%)
+  — noise-character-dependent, not noise-frequency-dependent
+- **LMS adaptive filtering resolves it** (F1=96.30%), generalizing across
+  4 diverse cardiac conditions (96.04% ± 0.40%) and the entire 6–14Hz
+  vulnerable frequency band, with no per-condition parameter re-tuning
+  required
+- **Hybrid Butterworth+LMS cascade** improves SNR by a statistically
+  validated 4.9× over LMS alone (paired t-test, n=30, t(29)=69.23,
+  p<0.001) at only 14% additional computational cost
+
+**Status:** Complete IEEE paper draft (Overleaf, IEEEtran). Literature
+review grounded against Thakor & Zhu (1991), Makdessy et al. (2020), and
+Khiter et al. (2020). Not yet reviewed by professor.
+
+| Notebook | Topic |
+|---|---|
+| `month2_wavelet_analysis.ipynb` | CWT scalograms, DWT denoising, LMS/RLS, in-band noise resolution |
+| Month 4 extensions (multi-record, frequency sweep, hybrid, robustness) | Generalization and statistical validation |
+
+---
 
 ## Month 3 — FPGA Hardware Implementation
 
-Implemented the Month 1 FIR Kaiser filter (873 taps, Q1.15 fixed-point) in
-VHDL, using a time-multiplexed single-multiplier architecture. Verified
-functional correctness against the Python golden reference in Questa, then
-synthesized and timing-closed on a real Cyclone V FPGA target.
+Implements the Paper 1 FIR Kaiser filter (873 taps) in VHDL on a real
+Cyclone V FPGA, verified against the Python software implementation.
 
-**Key results:**
-- 1000/1000 test samples verified against Python reference, max error 4 Q15
-  units
-- Synthesis: 1/156 DSP blocks used (<1%), 9% logic utilization
-- Timing: meets 50MHz real-time target with positive slack (+2.036ns
-  worst-case corner)
+**Key result:** 1000/1000 samples verified against Python reference (max
+error 4 Q15 units). Time-multiplexed architecture uses 1 DSP block (of
+156 available), 9% logic utilization. Meets 50MHz real-time timing target
+with +2.036ns positive slack under worst-case silicon conditions.
 
-Full writeup: `paper_notes/month3_fpga_report.md`
+Full writeup: [`paper_notes/month3_fpga_report.md`](paper_notes/month3_fpga_report.md)
 
-Files: `fir_filter_873tap.vhd`, `fir_filter_tb.vhd`, `fir_coeffs.vhd`,
-`fir_filter_873tap.sdc`
+| File | Purpose |
+|---|---|
+| `fir_filter_873tap.vhd` | Filter entity + 3-process architecture (FSM + datapath) |
+| `fir_filter_tb.vhd` | Questa testbench with file-based verification |
+| `fir_coeffs.vhd` | Q1.15 coefficient ROM (873 entries) |
+| `fir_filter_873tap.sdc` | Timing constraint (50MHz clock) |
 
-## Foundational Notebooks (pre-Month-1)
+---
 
-| Notebook | Topic | Week |
-|----------|-------|------|
-| `week1-signals-basics.ipynb` | Sine waves, sampling, aliasing | Week 1 |
-| `week1-filtering-basics.ipynb` | Low-pass filter, SNR measurement | Week 1 |
-| `signal-composition-demo.ipynb` | Complete signal analysis pipeline | Week 1 |
-| `week2_day1_fft.ipynb` | FFT normalization, frequency resolution | Week 2 |
+## Foundational Notebooks (Pre-Paper-1)
 
-## Paper Notes
+| Notebook | Topic |
+|---|---|
+| `week1-signals-basics.ipynb` | Sine waves, sampling, aliasing |
+| `week1-filtering-basics.ipynb` | Low-pass filter, SNR measurement |
+| `signal-composition-demo.ipynb` | Complete signal analysis pipeline |
+| `week2_day1_fft.ipynb` | FFT fundamentals |
 
-| File | Paper | Context |
-|------|-------|---------|
-| `paper_notes/week1_paper1.md` | ECG Baseline Denoising — Shi et al. 2021 | Foundational reading |
-| `paper_notes/month3_fpga_report.md` | Month 3 FPGA implementation writeup | Month 3 |
+---
+
+## Paper Notes / Literature Review
+
+| File | Paper |
+|---|---|
+| `paper_notes/week1_paper1.md` | ECG Baseline Denoising — Shi et al. 2021 |
+| `paper_notes/month3_fpga_report.md` | Month 3 FPGA implementation full report |
+| Das & Chakraborty (2017), Gond et al. (2024) | Paper 1 literature grounding |
+| Thakor & Zhu (1991), Makdessy et al. (2020), Khiter et al. (2020) | Paper 2 literature grounding |
+
+---
 
 ## Tools
 
-Python · NumPy · SciPy · Matplotlib · PyWavelets · wfdb · MIT-BIH PhysioNet
-Dataset · VHDL · Questa · Quartus Prime (Cyclone V) · Overleaf/LaTeX (IEEEtran)
+Python · NumPy · SciPy · Matplotlib · PyWavelets · MIT-BIH PhysioNet Dataset ·
+VHDL · Questa · Quartus Prime (Cyclone V) · Overleaf/LaTeX (IEEEtran)
