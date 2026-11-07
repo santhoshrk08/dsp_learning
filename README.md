@@ -109,7 +109,7 @@ Full writeup: [`paper_notes/month3_fpga_report.md`](paper_notes/month3_fpga_repo
 | `paper_notes/week1_paper1.md` | ECG Baseline Denoising — Shi et al. 2021 |
 | `paper_notes/month3_fpga_report.md` | Month 3 FPGA implementation full report |
 | Das & Chakraborty (2017), Gond et al. (2024) | Paper 1 literature grounding |
-| Thakor & Zhu (1991), Makdessy et al. (2020), Khiter et al. (2020) | Paper 2 literature grounding |
+| Thakor & Zhu (1991), Makdessy et al. (2020), Khiter et al. (2020) | Paper 2  literature grounding |
 
 ---
 
